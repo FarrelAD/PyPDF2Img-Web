@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to Image Converter</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'css/style.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-file-pdf"></i> PDF to Image Converter</h1>
+            <p>Convert your PDF pages into high-quality images</p>
+        </header>
+
+        <main class="main-content">
+            <div class="upload-section">
+                <form id="pdfForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            <h3>Drop your PDF file here</h3>
+                            <p>or click to browse</p>
+                        </div>
+                        <input type="file" id="pdfFile" name="pdf_file" accept=".pdf" required>
+                    </div>
+
+                    <div class="conversion-settings">
+                        <div class="setting-group">
+                            <label for="dpi">DPI (Resolution):</label>
+                            <select id="dpi" name="dpi">
+                                <option value="150">150 DPI (Fast)</option>
+                                <option value="300" selected>300 DPI (High Quality)</option>
+                                <option value="600">600 DPI (Ultra High)</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label for="format">Image Format:</label>
+                            <select id="format" name="format">
+                                <option value="png" selected>PNG (Lossless)</option>
+                                <option value="jpeg">JPEG (Smaller files)</option>
+                                <option value="tiff">TIFF (Professional)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="convert-btn" id="convertBtn">
+                        <i class="fas fa-magic"></i> Convert to Images
+                    </button>
+                </form>
+            </div>
+
+            <div class="progress-section" id="progressSection" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text" id="progressText">Converting PDF...</p>
+            </div>
+
+            <div class="result-section" id="resultSection" style="display: none;">
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Conversion Complete!</h3>
+                    <p id="resultText"></p>
+                    <a href="#" id="downloadLink" class="download-btn">
+                        <i class="fas fa-download"></i> Download Images
+                    </a>
+                </div>
+            </div>
+
+            <div class="error-section" id="errorSection" style="display: none;">
+                <div class="error-message" id="errorMessage">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Conversion Failed</h3>
+                    <p id="errorText"></p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Powered by PyPDF2Img & Django</p>
+        </footer>
+    </div>
+
+    <script src="{% load static %}{% static 'js/script.js' %}"></script>
+</body>
+</html>
