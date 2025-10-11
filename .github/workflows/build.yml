@@ -42,6 +42,5 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           files: dist/*
-          overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
