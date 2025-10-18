@@ -1,70 +1,174 @@
-# PyPDF2Img 📄🖼️
+# PDF to Image Converter - Web Interface
 
-![GitHub release](https://img.shields.io/github/v/release/FarrelAD/PyPDF2Img)
+A modern web application that converts PDF files into high-quality images with a beautiful, responsive interface.
 
-A simple PDF-to-image converter. This program is actually a **wrapper around the [`pdf2image`](https://pypi.org/project/pdf2image/) library**, with added convenience like automatically converting **all pages** of a PDF without extra setup.  
+## Features
 
-PyPDF2Img is already packaged as standalone binaries for **Windows, macOS, and Linux**. You can download the releases from the GitHub repository here:  
-[https://github.com/FarrelAD/PyPDF2Img/releases](https://github.com/FarrelAD/PyPDF2Img/releases)
+- 🎨 **Modern Web Interface** - Clean, responsive design with drag-and-drop file upload
+- 📄 **PDF to Image Conversion** - Convert PDF pages to PNG, JPEG, or TIFF images
+- ⚙️ **Customizable Settings** - Choose DPI resolution (150, 300, 600) and image format
+- 📦 **Batch Download** - Download all converted images as a single ZIP file
+- 🚀 **Fast Processing** - Optimized conversion with progress indicators
+- 📱 **Mobile Friendly** - Responsive design that works on all devices
 
----
+## Requirements
 
-# Manual Guide 🔎
+- Python 3.12+
+- Django 4.2+
+- pdf2image library
+- poppler-utils (for PDF processing)
 
-### 1. See program help
+## Installation
 
-Check all available options and usage:
-
-```bash
-pdf2img --help
-```
-This will show something like:
-```bash
-usage: pdf2img [-h] [-o OUTPUT] [--dpi DPI] [--format {png,jpeg,jpg,tiff}] pdf_path
-
-Convert PDF pages into images
-
-positional arguments:
-  pdf_path              Path to the input PDF file.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -o, --output          Output folder to save images (default: same folder as PDF / "output")
-  --dpi                 Resolution for output images (default: 300)
-  --format {png,jpeg,jpg,tiff}
-                        Image format for output (default: png)
-```
-
-### 2. Convert a PDF with default options
-
-This will create an `output` folder next to your PDF file and save all pages as PNG images:
+### 1. Install Python Dependencies
 
 ```bash
-pdf2img example.pdf
+pip install -r requirements.txt
 ```
-### 3. Convert a PDF to a custom folder
+
+Or using uv:
+```bash
+uv sync
+```
+
+### 2. Install Poppler (Required for PDF processing)
+
+#### Windows:
+- Download poppler binaries from [poppler-windows](https://github.com/oschwartz10612/poppler-windows/releases)
+- Extract and add the `bin` folder to your system PATH
+
+#### macOS:
+```bash
+brew install poppler
+```
+
+#### Linux:
+```bash
+sudo apt-get install poppler-utils
+```
+
+### 3. Set Up Django
 
 ```bash
-pdf2img example.pdf -o my_images
+# Run migrations
+python manage.py migrate
+
+# Create superuser (optional)
+python manage.py createsuperuser
 ```
 
-All images will be saved in the `my_images` folder.
+## Usage
 
-### 4. Set a custom DPI (resolution)
+### Start the Development Server
 
 ```bash
-pdf2img example.pdf --dpi 150
+python manage.py runserver
 ```
 
-### 5. Change the output image format
+Open your browser and go to `http://127.0.0.1:8000`
+
+### Using the Web Interface
+
+1. **Upload PDF**: Drag and drop your PDF file or click to browse
+2. **Configure Settings**: 
+   - Choose DPI resolution (150 for fast, 300 for quality, 600 for ultra-high)
+   - Select image format (PNG, JPEG, or TIFF)
+3. **Convert**: Click "Convert to Images" button
+4. **Download**: Download the ZIP file containing all converted images
+
+### Command Line Usage (Original)
+
+You can still use the original command-line interface:
 
 ```bash
-pdf2img example.pdf --format jpeg
+python main.py "path/to/your/file.pdf" --dpi 300 --format png --output "output_folder"
 ```
 
-Supports: `png`, `jpeg`, `jpg`, `tiff`.
+## Project Structure
 
-## NOTES 📝
+```
+PyPDF2Img/
+├── main.py                 # Original command-line script
+├── manage.py              # Django management script
+├── pdf2img_web/           # Django project settings
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── converter/             # Main Django app
+│   ├── views.py           # Web interface logic
+│   ├── pdf_converter.py   # PDF conversion functions
+│   └── urls.py
+├── templates/             # HTML templates
+│   └── converter/
+│       └── home.html
+├── static/                # Static files
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── script.js
+├── media/                 # Uploaded files and converted images
+└── requirements.txt       # Python dependencies
+```
 
-- On Windows, the executable is `pdf2img.exe`. On macOS/Linux, it is `pdf2img`.
-- Works with multi-page PDFs automatically — no need to loop manually.
+## API Endpoints
+
+- `GET /` - Main upload interface
+- `POST /convert/` - Convert PDF to images
+- `GET /download/<filename>/` - Download converted images as ZIP
+
+## Configuration
+
+### File Upload Limits
+Default maximum file size is 50MB. You can modify this in `pdf2img_web/settings.py`:
+
+```python
+FILE_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024  # 50MB
+```
+
+### Supported Formats
+- **Input**: PDF files
+- **Output**: PNG, JPEG, TIFF images
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"poppler not found" error**:
+   - Make sure poppler-utils is installed and in your PATH
+   - On Windows, ensure the poppler bin folder is added to system PATH
+
+2. **File upload errors**:
+   - Check file size limits in settings.py
+   - Ensure the file is a valid PDF
+
+3. **Conversion fails**:
+   - Verify the PDF file is not corrupted
+   - Check that poppler is properly installed
+
+## Development
+
+### Running Tests
+```bash
+python manage.py test
+```
+
+### Creating Migrations
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## Support
+
+If you encounter any issues or have questions, please open an issue on GitHub.
